@@ -1,0 +1,1509 @@
+﻿@section scripts {
+    <script>
+
+        var jumboHeight = $('.jumbotron').outerHeight();
+        function parallax() {
+            var scrolled = $(window).scrollTop();
+            $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+        }
+
+        $(window).scroll(function (e) {
+            parallax();
+        });
+    </script>
+}
+
+<div class="bg" style="background: url('../Resources/pencil-1891732_1920.jpg') no-repeat center center;"></div>
+<div class="jumbotron text-center">
+    <h1 class="text-center" style="color:gainsboro; margin-top:100px; ">Projekt Korepetyror</h1>
+    <br />
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <img src="~/Resources/projektKorepetycje.jpg" class="img-responsive center-block" />
+    </div>
+</div>
+
+<h2 style="margin:25px; margin-top:50px;">Spis Treści:</h2>
+
+<ul style="font-size:20px; margin:30px;">
+    <li><a href="#AddStudent">Dodawanie uczniów</a></li>
+    <li><a href="#AddPrivateLesson">Dodawanie godzin korepetycji</a></li>
+    <li><a href="#DeleteStudent">Usuwanie uczniów</a></li>
+    <li><a href="#DeletePrivateLesson">usuwanie godzin korepetycji</a></li>
+    <li><a href="#Schedule">Grafik</a></li>
+    <li><a href="#EditPrivateLesson">Edycja zajęć</a></li>
+    <li><a href="#StudentList">Spis uczniów</a></li>
+    <li><a href="#EditStudent">Edycja ucznia</a></li>
+    <li><a href="#Summary">Podsumowanie</a></li>
+</ul>
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <h1 class="text-center">Opis Aplikacji:</h1>
+
+        <p class="text-justify">
+            Aplikacja powstała na potrzeby nauki programowania w .NET. Nie chciałem aby była kolejną nieużyteczną i nigdy nie wykorzystaną aplikacją dlatego też postanowiłem
+            zrobić coś co komuś może pomóc w codziennych zajęciach. I tak pod koniec czerwca 2017 powstał program mający pomóc mojej dziewczynie w prowadzeniu korepetycji.
+            Niestety zajęcia w szkołach się już skończyły i nie było sposobności wypróbowania tego kawałka kodu w akcji ale mam dwa miesiące na przeniesienie tego pomysłu do aplikacji webowej.
+        </p>
+        <p class="text-justify">Zasada działania jest prosta. Należy wprowadzić najpierw wszystkich uczniów do bazy danych a następnie dodać im odpowiednie godziny korepetycji w tygodniu.</p>
+
+        <p>Tylko tyle? - NIE!</p>
+        <p class="text-justify">
+            To by było za proste. W tym programie można też edytować dane swoich podopiecznych (przecież mogą zmienić klasę/adres zamieszkania a nawet nazwisko!) w razie pomyłki lub gdyby uległy zmianie.
+            Jest też opcja edycji wybranych zajęć. Edytować, zmieniać i poprawiać można wszystko i w nieskończoność a w razie naszej pomyłko program upomni się o prawidłowe dane.
+        </p>
+        <p class="text-justify">Najważniejszą częścią programu jednak jeest grafik w którym widać wszystkie godziny posortowane wg. dni tygodnia i godzin.</p>
+
+        <div class="line"></div>
+    </div>
+</div>
+
+<a name="AddStudent"></a>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center">Dodawanie Uczniów:</h3>
+        <img src="~/Resources/DodajUczniaWinForms.jpg" class="img-responsive center-block" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h5 class="text-center">`Opis funkcji dodawania uczniów:</h5>
+        <p class="text-justify">
+            Po wypełnieniu danych i kliknięciu na dyskietkę wyświetli się okienko żądające potwierdzenia dodania ucznia o podanych danych. Po potwierdzeniu jeśli pomyślnie doda nam podopiecznego wyświetli się komunikat z
+            z potwierdzeniem pomyślnie dodawanego wiersza w bazie danych.
+        </p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <h5 class="text-center">Kod:</h5>
+        <p class="text-justify"> pora na trochę kodu. Jest to moja pierwsza bardziej rozbudowana aplikacja a także pierwsza która nie jest w konsoli</p>
+        <p class="text-justify">
+            Zasady SOLID również były mi obce także nie będzie idealnie ale DZIAŁA! Byłem niesamowicie dumny z tego gdy wszystko zaczęło dobrze funkcjonować
+            a jeszcze bardziej jak dodałem graficzny interface. Wszelki feedback na maila mile widziany!
+        </p>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title"> C# code</h3>
+            </div>
+<pre class="csharpcode">
+<span class="kwrd">private</span> <span class="kwrd">void</span> Submit_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd csharp">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(tb_Name.Text))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Podaj imię ucznia!"</span>);
+            <span class="kwrd">return</span>;
+            }
+
+            <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(tb_Surname.Text))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Podaj nazwisko ucznia!"</span>);
+            <span class="kwrd">return</span>;
+            }
+            <span class="kwrd">int</span> value;
+
+            <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(tb_PhoneNumber.Text) ||
+                tb_PhoneNumber.Text.Length != 9 || 
+                !<span class="kwrd">int</span>.TryParse(tb_PhoneNumber.Text, <span class="kwrd">out</span> value))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Podaj 9 cyfrowy numer telefonu "</span> +
+            <span class="str">"(musi się składać tylko z cyfr, bez spacji)"</span>);
+            <span class="kwrd">return</span>;
+            }
+
+            <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(tb_City.Text) || <span class="kwrd">string</span>.IsNullOrWhiteSpace(tb_Street.Text))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Podaj pełny adres ucznia"</span>);
+            <span class="kwrd">return</span>;
+            }
+
+            <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(cb_Level.Text))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Wybierz poziom nauczania ucznia!"</span>);
+            <span class="kwrd">return</span>;
+            }
+            <span class="kwrd">if</span> ((cb_Level.SelectedIndex == 0 || cb_Level.SelectedIndex == 1 || 
+                cb_Level.SelectedIndex == 2 || cb_Level.SelectedIndex == 3) 
+                &amp;&amp; <span class="kwrd">string</span>.IsNullOrWhiteSpace(cb_Class.Text))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Wybierz klasę ucznia!"</span>);
+            <span class="kwrd">return</span>;
+            }
+
+            <span class="kwrd">var</span> student = <span class="kwrd">new</span> Students()
+            {
+                Name = tb_Name.Text,
+                Surname = tb_Surname.Text,
+                PhoneNumber = <span class="kwrd">int</span>.Parse(tb_PhoneNumber.Text),
+                City = tb_City.Text,
+                Street = tb_Street.Text,
+                Level = cb_Level.Text,
+                SchoolClass = <span class="kwrd">int</span>.Parse(cb_Class.Text),
+                Comment = tb_Comment.Text,
+                CreatedDate = DateTime.Now,
+                StudentDescription = tb_Surname.Text + <span class="str">" "</span> + tb_Name.Text + <span class="str">" "</span> + tb_City.Text
+            };
+
+            <span class="kwrd">string</span> message = $<span class="str">"Czy na pewno chcesz dodać ucznia: \n"</span> +
+                                    $<span class="str">" {student.Name.ToUpper()} {student.Surname.ToUpper()}\n"</span> +
+                                    $<span class="str">"numer telefonu: {student.PhoneNumber}\n"</span> +
+                                    $<span class="str">"Adres: {student.City} {student.Street}\n"</span> +
+                                    $<span class="str">"poziom nauczania: {student.Level} klasa: {student.SchoolClass}\n"</span> +
+                                    $<span class="str">"Komentarz: {student.Comment}"</span>;
+            <span class="kwrd">const</span> <span class="kwrd">string</span> caption = <span class="str">"Form Closing"</span>;
+            <span class="kwrd">var</span> result = MessageBox.Show(message, caption,
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
+
+            <span class="kwrd">if</span> (result == DialogResult.Yes)
+            {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> PrivateLessonsDB = <span class="kwrd">new</span> PrivateLessonsEntities())
+                {
+                    PrivateLessonsDB.Students.Add(student);
+                    PrivateLessonsDB.SaveChanges();
+                }
+
+                result = MessageBox.Show(<span class="str">"Pomyślnie dodano ucznia!"</span>);
+            }
+        }</pre>
+        </div>
+    </div>
+</div>
+
+<div class="line"></div>
+
+<a name="AddPrivateLesson"></a>
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <h3 class="text-center">Dodawanie godzin korepetycji:</h3>
+
+        <img src="~/Resources/DodajGodzineWinForms.jpg" class="img-responsive center-block" />
+
+        <h5 class="text-center">Opis funkcji dodawania zajęć:</h5>
+        <p class="text-justify">
+            Podobnie jak w przypadku uczniów. Wypełnić dane - zaakceptować. W razie nachodzenia na siebie godzin lub innych problemów dostaniemy stosowną wiadomość.
+        </p>
+
+        <h5 class="text-center">Kod:</h5>
+
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code</h3>
+            </div>
+
+
+
+<pre class="csharpcode">
+<span class="kwrd">private</span> <span class="kwrd">void</span> b_save_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+
+            <span class="kwrd">if</span> (tb_Subject.Visible == <span class="kwrd">true</span> &amp;&amp; <span class="kwrd">string</span>.IsNullOrWhiteSpace(tb_Subject.Text))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Należy wybrać przedmiot lub wpisać go ręcznie!"</span>);
+            <span class="kwrd">return</span>;
+            }
+
+            <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(cb_StartMin.Text) || <span class="kwrd">string</span>.IsNullOrWhiteSpace(cb_startDateHour.Text))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Wybierz godzinę rozpoczęcia zajęć!"</span>);
+            <span class="kwrd">return</span>;
+            }
+
+            <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(cb_Duration.Text))
+            {
+            <span class="kwrd">var</span> errorNullOrwhiteSpace = MessageBox.Show(<span class="str">"Wybierz czas trwania zajęć!"</span>);
+            <span class="kwrd">return</span>;
+            }
+
+            <span class="kwrd">var</span> startDate = DateTime.Parse(dtp_StartDate.Text)
+                            .AddHours(<span class="kwrd">int</span>.Parse(cb_startDateHour.Text))
+                            .AddMinutes(<span class="kwrd">int</span>.Parse(cb_StartMin.Text));
+
+            <span class="kwrd">var</span> isHome = <span class="kwrd">true</span>;
+            <span class="kwrd">if</span>(rb_StudentHome.Checked == <span class="kwrd">true</span>)
+            {
+                isHome = <span class="kwrd">false</span>;
+            }
+
+            <span class="kwrd">var</span> subject = <span class="str">"Matematyka"</span>;
+            <span class="kwrd">if</span> (rb_OtherTopic.Checked == <span class="kwrd">true</span>)
+            { 
+                subject = tb_Subject.Text;
+            }
+            <span class="kwrd">var</span> culture = <span class="kwrd">new</span> CultureInfo(<span class="str">"pl-PL"</span>);
+            <span class="kwrd">var</span> privateLesson = <span class="kwrd">new</span> PrivateLessonHour()
+            {
+                StudentId = <span class="kwrd">int</span>.Parse(cb_UsersList.SelectedValue.ToString()),
+                StartDate = startDate,
+                EndDate = startDate.AddMinutes(<span class="kwrd">int</span>.Parse(cb_Duration.Text)),
+                IsHome = isHome,
+                Subject = subject,
+                Topic = tb_Topic.Text,
+                Comment = tb_Comment.Text,
+                HourDescription = startDate.ToString(<span class="str">"HH:mm"</span>)
+                                 + <span class="str">" | "</span> +  cb_UsersList.Text + 
+            <span class="str">" | "</span> +  culture.DateTimeFormat.GetDayName(startDate.DayOfWeek) + 
+            <span class="str">" "</span> + startDate.Day + 
+            <span class="str">"-"</span> + startDate.Month + 
+            <span class="str">"-"</span>+ startDate.Year,
+                HourDescriptionSchedule = cb_UsersList.Text
+            };
+
+            <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(privateLesson.Topic))
+            {
+                privateLesson.Topic = <span class="str">"brak tematu"</span>;
+            }
+
+            <span class="kwrd">if</span> (<span class="kwrd">string</span>.IsNullOrWhiteSpace(privateLesson.Comment))
+            {
+                privateLesson.Comment = <span class="str">"brak komentarza"</span>;
+            }
+
+            <span class="kwrd">string</span> WhereLesson = <span class="str">"u mnie w domu"</span>;
+            <span class="kwrd">if</span> (privateLesson.IsHome == <span class="kwrd">false</span>)
+            {
+                WhereLesson = <span class="str">"u ucznia w domu"</span>;
+            }
+
+            <span class="kwrd">string</span> message = $<span class="str">"Czy na pewno chcesz dodać godzinę korepetycji dla: \n"</span> +
+                                    $<span class="str">" {privateLesson.HourDescriptionSchedule.ToUpper()} \n"</span> +
+                                    $<span class="str">"rozpoczynającą się: {privateLesson.StartDate.ToString("</span>HH:mm dddd dd MMMM<span class="str">")} \n"</span> +
+                                    $<span class="str">"konczącą sie: {privateLesson.EndDate.ToString("</span>HH:mm dddd dd MMMM<span class="str">")} \n"</span> +
+                                    $<span class="str">"odbywającą się: {WhereLesson} \n"</span> +
+                                    $<span class="str">"Przedmiot: {privateLesson.Subject} - {privateLesson.Topic} \n"</span> +
+                                    $<span class="str">"Komentarz: {privateLesson.Comment}"</span>;
+            <span class="kwrd">const</span> <span class="kwrd">string</span> caption = <span class="str">"Form Closing"</span>;
+            <span class="kwrd">var</span> result = MessageBox.Show(message, caption,
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
+            <span class="kwrd">if</span> (result == DialogResult.Yes)
+            {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> PrivateLessonsDB = <span class="kwrd">new</span> PrivateLessonsEntities())
+                {
+            <span class="kwrd">var</span> validateHour = PrivateLessonsDB.PrivateLessonHour.Where(h =&gt; h.StartDate.Day == privateLesson.StartDate.Day &amp;&amp;
+                                                                                     h.StartDate.Month == privateLesson.StartDate.Month &amp;&amp;
+                                                                                     h.StartDate.Year == privateLesson.StartDate.Year);
+            <span class="kwrd">int</span> checkValidate = 0;
+
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> hour <span class="kwrd">in</span> validateHour)
+                    {
+            <span class="kwrd">if</span> (((privateLesson.StartDate &gt; hour.StartDate) &amp;&amp; (privateLesson.EndDate &lt; hour.EndDate)) ||
+                            (privateLesson.StartDate == hour.StartDate &amp;&amp; privateLesson.EndDate == hour.EndDate) ||
+                            (privateLesson.EndDate &lt;= hour.EndDate &amp;&amp; privateLesson.EndDate &gt; hour.StartDate) ||
+                            (privateLesson.StartDate &lt; hour.EndDate &amp;&amp; privateLesson.StartDate &gt;= hour.StartDate) ||
+                            (hour.StartDate &gt; privateLesson.StartDate &amp;&amp; hour.EndDate &lt; privateLesson.EndDate)
+                            )
+                        {
+                            checkValidate++;
+                        }
+                    }
+
+
+            <span class="kwrd">if</span> (checkValidate == 0)
+                    {
+                        PrivateLessonsDB.PrivateLessonHour.Add(privateLesson);
+                        PrivateLessonsDB.SaveChanges();
+            <span class="kwrd">string</span> finishMessage = <span class="str">"Pomyślnie dodano godzinę do bazy danych"</span>;
+                        result = MessageBox.Show(finishMessage);
+                    }
+            <span class="kwrd">else</span>
+                    {
+            <span class="kwrd">string</span> errorMessage = <span class="str">"Nowa godzina korepetycji pokrywa się z aktualnie istniejącą"</span>;
+                        result = MessageBox.Show(errorMessage);
+                    }
+                }
+            }
+        }</pre>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+<div class="line"></div>
+
+<a name="DeleteStudent"></a>
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <h3 class="text-center">Usuwanie uczniów:</h3>
+
+        <img src="~/Resources/UsunUczniaWinForms.jpg" class="img-responsive center-block" />
+
+        <h5 class="text-center">Opis funkcji dodawania zajęć:</h5>
+        <p class="text-justify">
+            Po lewej stronie mamy listę wszystkich uczniów a po prawej tych do usunięcia. Za pomocą strzałek wybieramy tych, których chcemy usunąć. W razie pomyłki można zawsze odwrócić naszą akcję
+            strzałką w drugą stronę.
+        </p>
+
+        <h5 class="text-center">Kod:</h5>
+
+        <p class="text-justify">
+            Całość opiera się na tym, że przy załadowaniu się okienka zaciąga się z bazy danych lista uczniów i przypisuje do listy po lewej. Gdy zaznaczymy pozycję do usunięcia i klikniemy na
+            strzałkę w prawo, wtedy element z jednej listy przeniesie się do drugiej. Rozwiązanie proste ale zaimplementowanie tego trochę czasu i wysiłku mnie kosztowało.
+            Oczywiście zdaję sobie sprawę z tego, że kod jest chaotyczny ale tak jak wcześniej wspomniałem zabieram się do "przepisania" tego do aplikacji webowej.
+        </p>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">public</span> <span class="kwrd">partial</span> <span class="kwrd">class</span> DeleteStudent : Form
+    {
+            <span class="kwrd">private</span> List&lt;Students&gt; StudentsSelectedList;
+            <span class="kwrd">private</span> List&lt;Students&gt; StudentsPickList;
+
+
+            <span class="kwrd">public</span> DeleteStudent()
+        {
+            InitializeComponent();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> FillListBoxWithStudents()
+        {
+            lb_PickStudents.DataSource = StudentsPickList;
+            lb_PickStudents.ValueMember = <span class="str">"Id"</span>;
+            lb_PickStudents.DisplayMember = <span class="str">"StudentDescription"</span>;
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> DeleteStudent_Load(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">var</span> StudentList = <span class="kwrd">new</span> StudentList();
+            StudentsPickList = StudentList.StudentsPickList;
+            StudentsSelectedList = <span class="kwrd">new</span> List&lt;Students&gt;();
+            FillListBoxWithStudents();
+
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> UpdatePickListBox()
+        {
+            lb_PickStudents.DataSource = StudentsPickList;
+            lb_PickStudents.ValueMember = <span class="str">"Id"</span>;
+            lb_PickStudents.DisplayMember = <span class="str">"StudentDescription"</span>;
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> UpdateSelectedListBox()
+        {
+            
+            lb_SelectedStudents.DataSource = StudentsSelectedList;
+            lb_SelectedStudents.ValueMember = <span class="str">"Id"</span>;
+            lb_SelectedStudents.DisplayMember = <span class="str">"StudentDescription"</span>;
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ClearListboxex()
+        {
+            lb_PickStudents.DataSource = <span class="kwrd">null</span>;
+            lb_PickStudents.Items.Clear();
+            UpdatePickListBox();
+            lb_SelectedStudents.DataSource = <span class="kwrd">null</span>;
+            lb_SelectedStudents.Items.Clear();
+            UpdateSelectedListBox();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ArrowRught_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+
+            <span class="kwrd">if</span> (StudentsPickList.Count&gt;0)
+            {
+            <span class="kwrd">var</span> studentToRemove = StudentsPickList.Single(s =&gt; s.Id == <span class="kwrd">int</span>.Parse(lb_PickStudents.SelectedValue.ToString()));
+                StudentsSelectedList.Add(studentToRemove);
+                StudentsPickList.Remove(studentToRemove);
+                ClearListboxex();
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ArrowLeft_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (StudentsSelectedList.Count&gt;0)
+            {
+            <span class="kwrd">var</span> studentToReturn = StudentsSelectedList.Single(s =&gt; s.Id == <span class="kwrd">int</span>.Parse(lb_SelectedStudents.SelectedValue.ToString()));
+                StudentsSelectedList.Remove(studentToReturn);
+                StudentsPickList.Add(studentToReturn);
+                ClearListboxex();
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> Submit_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> DB = <span class="kwrd">new</span> PrivateLessonsEntities())
+            {
+            <span class="kwrd">var</span> studentIdList = <span class="kwrd">new</span> List&lt;<span class="kwrd">int</span>&gt;();
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> student <span class="kwrd">in</span> StudentsSelectedList)
+                {
+                    studentIdList.Add(student.Id);
+                }
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> id <span class="kwrd">in</span> studentIdList)
+                {
+            <span class="kwrd">var</span> studentToDelete = DB.Students.FirstOrDefault(i =&gt; i.Id == id);
+                    DB.Students.Remove(studentToDelete);
+                }
+                DB.SaveChanges();
+            }
+            StudentsSelectedList.Clear();
+            ClearListboxex();
+        }
+    }</pre>
+
+        </div>
+
+
+    </div>
+</div>
+
+<div class="line"></div>
+
+<a name="DeletePrivateLesson"></a>
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <h3 class="text-center">Usuwanie godziny korepetycji:</h3>
+
+        <img src="~/Resources/UsunGodzineWinForms.jpg" class="img-responsive center-block" />
+
+        <h5 class="text-center">Opis funkcji Usuwania zajęć:</h5>
+        <p class="text-justify">
+            Tak jak wcześniej tylko z tą różnicą, że więcej się dzieje! Zamiast studentów mamy godziny i nie wszystkie a posortowane. Można je posortować następująco:
+
+            <ul>
+                <li>wg. ucznia - wyświetlić wszystkie jego godziny,</li>
+                <li>wg. ucznia i po dacie - wyświetli wszystkie godziny ucznia z danego dnia</li>
+                <li>wg. daty - wyświetli wszystkie godziny wszystkich uczniów danego dnia</li>
+                <li>wg. daty i po uczniu - wyświetli wszystkie godziny z żądanego dnia i zaznaczonego ucznia</li>
+
+            </ul>
+
+        </p>
+
+        <h5 class="text-center">Kod:</h5>
+
+        <p class="text-justify">
+            Kod tak samo jak wcześniej, Opiera się na dwóch listach. Różnica polega jedynie na wyszukaniu odpowiedniej listy godzin.
+        </p>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">public</span> <span class="kwrd">partial</span> <span class="kwrd">class</span> DeletePrivateLesson : Form
+    {
+        List&lt;PrivateLessonHour&gt; PickHourList;
+        List&lt;PrivateLessonHour&gt; SelectedHourList;
+
+
+            <span class="kwrd">public</span> DeletePrivateLesson()
+        {
+            InitializeComponent();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> pb_exit_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">this</span>.Close();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> FillComboBoxWithStudents()
+        {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> PrivateLessonsDb = <span class="kwrd">new</span> PrivateLessonsEntities())
+            {
+
+                cb_SelectStudent.DataSource = PrivateLessonsDb.Students.ToList();
+                cb_SelectStudent.ValueMember = <span class="str">"Id"</span>;
+                cb_SelectStudent.DisplayMember = <span class="str">"StudentDescription"</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> FillListBoxWithHours()
+        {
+            lb_PickHours.DataSource = PickHourList;
+            lb_PickHours.ValueMember = <span class="str">"Id"</span>;
+            lb_PickHours.DisplayMember = <span class="str">"HourDescription"</span>;
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> DeleteDubbled()
+        {
+            <span class="kwrd">if</span> (SelectedHourList.Count&gt;0)
+            {
+            <span class="kwrd">var</span> hoursToRemove = <span class="kwrd">new</span> List&lt;PrivateLessonHour&gt;();
+                
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> hourPick <span class="kwrd">in</span> PickHourList)
+                {
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> hourSelect <span class="kwrd">in</span> SelectedHourList)
+                    {
+            <span class="kwrd">if</span> (hourSelect.Id == hourPick.Id)
+                        {
+                            hoursToRemove.Add(hourSelect);
+                        }
+                    }
+                }
+
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> hour <span class="kwrd">in</span> hoursToRemove)
+                {
+                    PickHourList.RemoveAll(h =&gt; h.Id == hour.Id);
+                }
+                    
+                lb_PickHours.DataSource = <span class="kwrd">null</span>;
+                lb_PickHours.Items.Clear();
+                UpdatePickListBox();
+            }
+        }
+        
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> DeletePrivateLesson_Load(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            SelectedHourList = <span class="kwrd">new</span> List&lt;PrivateLessonHour&gt;();
+            PickHourList = <span class="kwrd">new</span> List&lt;PrivateLessonHour&gt;();
+            FillComboBoxWithStudents();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> b_Show_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            PickHourList.Clear();
+            ShowHours();
+            DeleteDubbled();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ShowHours()
+        {
+            <span class="kwrd">if</span> (rb_SortDateOrder.Checked == <span class="kwrd">true</span>)
+            {
+            <span class="kwrd">var</span> ListObj = <span class="kwrd">new</span> PrivateLessonsHoursList(dtp_SelectDate.Value, chb_ByStudent.Checked, <span class="kwrd">int</span>.Parse(cb_SelectStudent.SelectedValue.ToString()));
+                PickHourList = ListObj.PrivateLessonsList;
+            }
+            <span class="kwrd">else</span>
+            {
+            <span class="kwrd">var</span> ListObj = <span class="kwrd">new</span> PrivateLessonsHoursList(<span class="kwrd">int</span>.Parse(cb_SelectStudent.SelectedValue.ToString()), chb_ByDate.Checked, dtp_SelectDate.Value);
+                PickHourList = ListObj.PrivateLessonsList;
+            }
+            FillListBoxWithHours();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> rb_SortDateOrder_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (rb_SortDateOrder.Checked == <span class="kwrd">true</span>)
+            {
+                cb_SelectStudent.Enabled = <span class="kwrd">false</span>;
+                chb_ByDate.Enabled = <span class="kwrd">false</span>;
+                chb_ByDate.Checked = <span class="kwrd">false</span>;
+                chb_ByStudent.Enabled = <span class="kwrd">true</span>;
+                dtp_SelectDate.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                cb_SelectStudent.Enabled = <span class="kwrd">true</span>;
+                chb_ByDate.Enabled = <span class="kwrd">true</span>;
+                chb_ByStudent.Enabled = <span class="kwrd">false</span>;
+                chb_ByStudent.Checked = <span class="kwrd">false</span>;
+                dtp_SelectDate.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> chb_ByDate_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (chb_ByDate.Checked == <span class="kwrd">true</span>)
+            {
+                dtp_SelectDate.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                dtp_SelectDate.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> chb_ByStudent_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (chb_ByStudent.Checked == <span class="kwrd">true</span>)
+            {
+                cb_SelectStudent.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                cb_SelectStudent.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> UpdatePickListBox()
+        {
+            lb_PickHours.DataSource = PickHourList;
+            lb_PickHours.ValueMember = <span class="str">"Id"</span>;
+            lb_PickHours.DisplayMember = <span class="str">"HourDescription"</span>;
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> UpdateSelectedListBox()
+        {
+
+            lb_SelectedHours.DataSource = SelectedHourList;
+            lb_SelectedHours.ValueMember = <span class="str">"Id"</span>;
+            lb_SelectedHours.DisplayMember = <span class="str">"HourDescription"</span>;
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ClearListboxex()
+        {
+            lb_PickHours.DataSource = <span class="kwrd">null</span>;
+            lb_PickHours.Items.Clear();
+            UpdatePickListBox();
+            lb_SelectedHours.DataSource = <span class="kwrd">null</span>;
+            lb_SelectedHours.Items.Clear();
+            UpdateSelectedListBox();
+        }
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ArrowRught_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (PickHourList.Count &gt; 0)
+            {
+            <span class="kwrd">var</span> hourToRemove = PickHourList.Single(s =&gt; s.Id == <span class="kwrd">int</span>.Parse(lb_PickHours.SelectedValue.ToString()));
+                SelectedHourList.Add(hourToRemove);
+                PickHourList.Remove(hourToRemove);
+                ClearListboxex();
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ArrowLeft_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (SelectedHourList.Count &gt; 0)
+            {
+            <span class="kwrd">var</span> studentToReturn = SelectedHourList.Single(s =&gt; s.Id == <span class="kwrd">int</span>.Parse(lb_SelectedHours.SelectedValue.ToString()));
+                SelectedHourList.Remove(studentToReturn);
+                PickHourList.Add(studentToReturn);
+                ClearListboxex();
+            }
+        }
+            <span class="kwrd">private</span> <span class="kwrd">void</span> Submit_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> DB = <span class="kwrd">new</span> PrivateLessonsEntities())
+            {
+            <span class="kwrd">var</span> IdListToDelete = <span class="kwrd">new</span> List&lt;<span class="kwrd">int</span>&gt;();
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> hour <span class="kwrd">in</span> SelectedHourList)
+                {
+                    IdListToDelete.Add(hour.Id);
+                }
+
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> id <span class="kwrd">in</span> IdListToDelete)
+                {
+            <span class="kwrd">var</span> hourToDelete = DB.PrivateLessonHour.FirstOrDefault(i =&gt; i.Id == id);
+                    DB.PrivateLessonHour.Remove(hourToDelete);
+                }
+                DB.SaveChanges();
+                SelectedHourList.Clear();
+                ClearListboxex();
+            }
+
+        }
+    }</pre>
+
+        </div>
+    </div>
+</div>
+
+<div class="line"></div>
+
+<a name="Schedule"></a>
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <h3 class="text-center">Grafik:</h3>
+
+        <img src="~/Resources/GrafikWinForms.jpg" class="img-responsive center-block" />
+
+        <h5 class="text-center">Opis funkcji wyświetlania grafiku:</h5>
+        <p class="text-justify">
+            Teraz w końcu najważniejsza funkcja. Grafik - pełni rolę planu lekcji tylko nie dla uczniów a dla korepetytora. Oprócz Zwykłego wyświetlenia godzin mamy możliwość
+            edycji i dodawania zajęć. Wystarczy kliknąć prawym przyciskiem myszy na wybraną godzinę, wybrać Edit i gotowe. Godzina rozłożona na części pierwsze z możliwością zmiany każdego
+            jej parametru. W tej części natomiast zajmiemy się samym wyświetlaniem - edycja później. Godziny ukażą nam się w 6 kolumnach, każda odpowiednio jest następnym dniem z kolei od wybranej
+            daty od której ma się wyświetlić grafik. Jest także przycisk "refresh" aby w razie edycji można było bez przeładowania całego okna łatwo podejrzeć czy po edycji wszystko jest okej.
+        </p>
+
+        <h5 class="text-center">Kod:</h5>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code</h3>
+            </div>
+
+<pre class="csharpcode">
+List&lt;PrivateLessonHour&gt; HourList = <span class="kwrd">new</span> List&lt;PrivateLessonHour&gt;(); 
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ScheduleFill(ListView ListView, DateTime Date)
+        {
+            ListView.Items.Clear();
+            <span class="kwrd">var</span> PrivateLessonsList = <span class="kwrd">new</span> List&lt;PrivateLessonHour&gt;();
+
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> DB = <span class="kwrd">new</span> PrivateLessonsEntities())
+                {
+                    PrivateLessonsList = DB.PrivateLessonHour.Where(d =&gt; d.StartDate.Day == Date.Day &amp;&amp;
+                                                                    d.StartDate.Month == Date.Month &amp;&amp;
+                                                                    d.StartDate.Year == Date.Year)
+                                                              .ToList();
+                }
+                PrivateLessonsList.Sort((d1, d2) =&gt; d1.StartDate.CompareTo(d2.StartDate));
+            
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> hour <span class="kwrd">in</span> PrivateLessonsList)
+                {
+            <span class="kwrd">string</span> lessonPlace;
+            <span class="kwrd">if</span> (hour.IsHome == <span class="kwrd">true</span>)
+                {
+                    lessonPlace = <span class="str">"U mnie w domu"</span>;
+                }
+            <span class="kwrd">else</span>
+                {
+                    lessonPlace = <span class="str">"DOJAZD DO UCZNIA"</span>;
+                }
+            <span class="kwrd">var</span> item = <span class="kwrd">new</span> ListViewItem(hour.Id.ToString());
+                    item.SubItems.Add(hour.StartDate.ToString(<span class="str">"HH:mm"</span>));
+                    item.SubItems.Add(hour.EndDate.ToString(<span class="str">"HH:mm"</span>));
+                    item.SubItems.Add(hour.HourDescriptionSchedule);
+                    item.ToolTipText = $<span class="str">"{hour.HourDescriptionSchedule} \n"</span> +
+                                        $<span class="str">"{hour.Subject}\n"</span> +
+                                        $<span class="str">"{hour.Topic}\n"</span> +
+                                        $<span class="str">"{lessonPlace}\n"</span> +
+                                        $<span class="str">"{hour.Comment}\n"</span> +
+                                        $<span class="str">"PPM - Edytuj"</span>;
+
+                
+
+                    ListView.Items.Add(item);
+                }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> HourListFill()
+        {
+            l_Day1.Visible = <span class="kwrd">true</span>;
+            l_Day2.Visible = <span class="kwrd">true</span>;
+            l_Day3.Visible = <span class="kwrd">true</span>;
+            l_Day4.Visible = <span class="kwrd">true</span>;
+            l_Day5.Visible = <span class="kwrd">true</span>;
+            l_Day6.Visible = <span class="kwrd">true</span>;
+
+            l_Day1.Text = dtp_Date.Value.ToString(<span class="str">"dddd dd MMMM"</span>);
+            l_Day2.Text = dtp_Date.Value.AddDays(1).ToString(<span class="str">"dddd dd MMMM"</span>);
+            l_Day3.Text = dtp_Date.Value.AddDays(2).ToString(<span class="str">"dddd dd MMMM"</span>);
+            l_Day4.Text = dtp_Date.Value.AddDays(3).ToString(<span class="str">"dddd dd MMMM"</span>);
+            l_Day5.Text = dtp_Date.Value.AddDays(4).ToString(<span class="str">"dddd dd MMMM"</span>);
+            l_Day6.Text = dtp_Date.Value.AddDays(5).ToString(<span class="str">"dddd dd MMMM"</span>);
+
+            ScheduleFill(lv_Day1, dtp_Date.Value);
+            ScheduleFill(lv_Day2, dtp_Date.Value.AddDays(1));
+            ScheduleFill(lv_Day3, dtp_Date.Value.AddDays(2));
+            ScheduleFill(lv_Day4, dtp_Date.Value.AddDays(3));
+            ScheduleFill(lv_Day5, dtp_Date.Value.AddDays(4));
+            ScheduleFill(lv_Day6, dtp_Date.Value.AddDays(5));
+
+            lv_Day1.Visible = <span class="kwrd">true</span>;
+            lv_Day2.Visible = <span class="kwrd">true</span>;
+            lv_Day3.Visible = <span class="kwrd">true</span>;
+            lv_Day4.Visible = <span class="kwrd">true</span>;
+            lv_Day5.Visible = <span class="kwrd">true</span>;
+            lv_Day6.Visible = <span class="kwrd">true</span>;
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> dtp_Date_ValueChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            HourListFill();
+
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> pb_Refresh_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            HourListFill();
+        }</pre>
+
+        </div>
+    </div>
+</div>
+
+<div class="line"></div>
+
+<a name="EditPrivateLesson"></a>
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <h3 class="text-center">Edycja godziny:</h3>
+
+        <img src="~/Resources/EditHourWinForms.jpg" class="img-responsive center-block" />
+
+        <h5 class="text-center">Opis funkcji edycji parametrów zajęć:</h5>
+        <p class="text-justify">
+            Kolejna bardzo ważna funkcja aplikacji. W razie naszej pomyłki lub losowego wypadku szybko możemy zmienić ucznia, przesunąć godzinę na inny dzień lub na inną godzinę.
+        </p>
+
+        <h5 class="text-center">Kod:</h5>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">public</span> <span class="kwrd">partial</span> <span class="kwrd">class</span> EditPrivateLesson : Form
+    {
+        PrivateLessonHour LessonToEdit;
+
+            <span class="kwrd">public</span> EditPrivateLesson(<span class="kwrd">int</span> id)
+        {
+            InitializeComponent();
+            LoadPrivateLesson(id);
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> LoadPrivateLesson(<span class="kwrd">int</span> id)
+        {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> DB = <span class="kwrd">new</span> PrivateLessonsEntities())
+            {
+                LessonToEdit = DB.PrivateLessonHour.Single(h =&gt; h.Id == id);
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> chb_EStudent_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (chb_EStudent.Checked == <span class="kwrd">true</span>)
+            {
+                cb_UsersList.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                cb_UsersList.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> chb_EStartHour_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (chb_EStartHour.Checked == <span class="kwrd">true</span>)
+            {
+                cb_StartMin.Enabled = <span class="kwrd">true</span>;
+                cb_startDateHour.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                cb_StartMin.Enabled = <span class="kwrd">false</span>;
+                cb_startDateHour.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> chb_EDuration_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (chb_EDuration.Checked == <span class="kwrd">true</span>)
+            {
+                cb_Duration.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                cb_Duration.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> chb_EIsHome_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (chb_EIsHome.Checked == <span class="kwrd">true</span>)
+            {
+                gb_Place.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                gb_Place.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ch_ESubject_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (ch_ESubject.Checked == <span class="kwrd">true</span>)
+            {
+                gb_Subject.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                gb_Subject.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ch_EDate_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (ch_EDate.Checked == <span class="kwrd">true</span>)
+            {
+                dtp_StartDate.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                dtp_StartDate.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ch_ETopic_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (ch_ETopic.Checked == <span class="kwrd">true</span>)
+            {
+                tb_Topic.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                tb_Topic.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> ch_EComment_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (ch_EComment.Checked == <span class="kwrd">true</span>)
+            {
+                tb_Comment.Enabled = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                tb_Comment.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> FillComboBoxWithStudents()
+        {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> PrivateLessonsDb = <span class="kwrd">new</span> PrivateLessonsEntities())
+            {
+                cb_UsersList.DataSource = PrivateLessonsDb.Students.ToList();
+                cb_UsersList.ValueMember = <span class="str">"Id"</span>;
+                cb_UsersList.DisplayMember = <span class="str">"StudentDescription"</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> EditPrivateLesson_Load(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            FillComboBoxWithStudents();
+            rb_Math.Checked = <span class="kwrd">true</span>;
+            rb_Home.Checked = <span class="kwrd">true</span>;
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> rb_OtherTopic_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">if</span> (rb_OtherTopic.Checked == <span class="kwrd">true</span>)
+            {
+                tb_Subject.Visible = <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">else</span>
+            {
+                tb_Subject.Visible = <span class="kwrd">false</span>;
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> b_save_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">var</span> culture = <span class="kwrd">new</span> CultureInfo(<span class="str">"pl-PL"</span>);
+
+            <span class="kwrd">if</span> (AddHourValidation.HourDataValidation(tb_Subject, cb_StartMin, cb_startDateHour, cb_Duration))
+            {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> DB = <span class="kwrd">new</span> PrivateLessonsEntities())
+                {
+            <span class="kwrd">var</span> HourToUpdate = DB.PrivateLessonHour.Single(h =&gt; h.Id == LessonToEdit.Id);
+
+            <span class="kwrd">if</span> (cb_UsersList.Enabled == <span class="kwrd">true</span>)
+                    {
+                        HourToUpdate.StudentId = <span class="kwrd">int</span>.Parse(cb_UsersList.SelectedValue.ToString());
+                        HourToUpdate.HourDescriptionSchedule = cb_UsersList.Text;
+                    }
+
+            <span class="kwrd">if</span> (cb_startDateHour.Enabled == <span class="kwrd">true</span> &amp;&amp; cb_StartMin.Enabled == <span class="kwrd">true</span>)
+                    {
+            <span class="kwrd">var</span> startDate = HourToUpdate.StartDate.Date
+                                .AddHours(<span class="kwrd">int</span>.Parse(cb_startDateHour.Text))
+                                .AddMinutes(<span class="kwrd">int</span>.Parse(cb_StartMin.Text));
+
+            <span class="kwrd">var</span> duration = (<span class="kwrd">int</span>)HourToUpdate.EndDate.TimeOfDay.TotalMinutes - (<span class="kwrd">int</span>)HourToUpdate.StartDate.TimeOfDay.TotalMinutes;
+
+                        HourToUpdate.StartDate = startDate;
+                        HourToUpdate.EndDate = startDate.AddMinutes(duration);
+
+                        HourToUpdate.HourDescription = HourToUpdate.StartDate.ToString(<span class="str">"HH:mm"</span>)
+                                     + <span class="str">" | "</span> + cb_UsersList.Text +
+            <span class="str">" | "</span> + culture.DateTimeFormat.GetDayName(HourToUpdate.StartDate.DayOfWeek) +
+            <span class="str">" "</span> + HourToUpdate.StartDate.Day +
+            <span class="str">"-"</span> + HourToUpdate.StartDate.Month +
+            <span class="str">"-"</span> + HourToUpdate.StartDate.Year;
+                    }
+
+            <span class="kwrd">if</span> (cb_Duration.Enabled == <span class="kwrd">true</span>)
+                    {
+            <span class="kwrd">var</span> mins = (<span class="kwrd">int</span>)HourToUpdate.StartDate.TimeOfDay.TotalMinutes;
+                        HourToUpdate.EndDate = HourToUpdate.StartDate.Date.AddMinutes(mins + <span class="kwrd">int</span>.Parse(cb_Duration.Text));
+
+                        HourToUpdate.HourDescription = HourToUpdate.StartDate.ToString(<span class="str">"HH:mm"</span>)
+                                     + <span class="str">" | "</span> + cb_UsersList.Text +
+            <span class="str">" | "</span> + culture.DateTimeFormat.GetDayName(HourToUpdate.StartDate.DayOfWeek) +
+            <span class="str">" "</span> + HourToUpdate.StartDate.Day +
+            <span class="str">"-"</span> + HourToUpdate.StartDate.Month +
+            <span class="str">"-"</span> + HourToUpdate.StartDate.Year;
+                    }
+
+            <span class="kwrd">if</span> (gb_Place.Enabled == <span class="kwrd">true</span>)
+                    {
+            <span class="kwrd">var</span> isHome = <span class="kwrd">true</span>;
+            <span class="kwrd">if</span> (rb_StudentHome.Checked == <span class="kwrd">true</span>)
+                        {
+                            isHome = <span class="kwrd">false</span>;
+                        }
+
+                        HourToUpdate.IsHome = isHome;
+                    }
+
+            <span class="kwrd">if</span> (gb_Subject.Enabled == <span class="kwrd">true</span>)
+                    {
+            <span class="kwrd">var</span> subject = <span class="str">"Matematyka"</span>;
+            <span class="kwrd">if</span> (rb_OtherTopic.Checked == <span class="kwrd">true</span>)
+                        {
+                            subject = tb_Subject.Text;
+                        }
+                        HourToUpdate.Subject = subject;
+                    }
+
+            <span class="kwrd">if</span> (dtp_StartDate.Enabled == <span class="kwrd">true</span>)
+                    {
+            <span class="kwrd">var</span> mins = (<span class="kwrd">int</span>)HourToUpdate.StartDate.TimeOfDay.TotalMinutes;
+            <span class="kwrd">var</span> duration = (<span class="kwrd">int</span>)HourToUpdate.EndDate.TimeOfDay.TotalMinutes - (<span class="kwrd">int</span>)HourToUpdate.StartDate.TimeOfDay.TotalMinutes;
+                        HourToUpdate.StartDate = DateTime.Parse(dtp_StartDate.Text);
+                        HourToUpdate.StartDate = HourToUpdate.StartDate.AddMinutes(mins);
+                        HourToUpdate.EndDate = DateTime.Parse(dtp_StartDate.Text);
+                        HourToUpdate.EndDate = HourToUpdate.StartDate.AddMinutes(duration);
+
+                        HourToUpdate.HourDescription = HourToUpdate.StartDate.ToString(<span class="str">"HH:mm"</span>)
+                                     + <span class="str">" | "</span> + cb_UsersList.Text +
+            <span class="str">" | "</span> + culture.DateTimeFormat.GetDayName(HourToUpdate.StartDate.DayOfWeek) +
+            <span class="str">" "</span> + HourToUpdate.StartDate.Day +
+            <span class="str">"-"</span> + HourToUpdate.StartDate.Month +
+            <span class="str">"-"</span> + HourToUpdate.StartDate.Year;
+                    }
+
+            <span class="kwrd">if</span> (tb_Topic.Enabled == <span class="kwrd">true</span>)
+                    {
+                        HourToUpdate.Topic = tb_Topic.Text;
+                    }
+
+            <span class="kwrd">if</span> (tb_Comment.Enabled == <span class="kwrd">true</span>)
+                    {
+                        HourToUpdate.Comment = tb_Comment.Text;
+                    }
+
+
+            <span class="kwrd">if</span> (AddHourValidation.HourOnHour(HourToUpdate))
+                    {
+                        DB.SaveChanges();
+            <span class="kwrd">var</span> finishMessage = MessageBox.Show(<span class="str">"Pomyślnie edytowano dane korepetycji"</span>);
+                    }
+            <span class="kwrd">else</span>
+                    {
+            <span class="kwrd">var</span> errorMessage = MessageBox.Show(<span class="str">"Nowa godzina korepetycji pokrywa się z już istniejącą"</span>);
+                    }
+                    
+                }
+            }
+        }
+    }</pre>
+
+        </div>
+    </div>
+</div>
+
+<div class="line"></div>
+
+<a name="StudentList"></a>
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <h3 class="text-center">Lista uczniów:</h3>
+
+        <img src="~/Resources/ListaUczniWinForms.jpg" class="img-responsive center-block" />
+
+        <h5 class="text-center">Opis funkcji wyświetlania spisu uczniów:</h5>
+        <p class="text-justify">
+            Ta funkcja nie jest już tak przydatna przy założeniu, że się nie mylimy i nasi podopieczni nie zmieniają adresów zamieszkania ani klas na przestrzeni nauki z nami.
+            Można tutaj podejżeć wszystkie dane swoich uczniów ale także je edytować! Dokładnie tak samo jak w przypadku godziń można zmienić wszystkie parametry z wyjątkiem
+            daty utworzenia pozycji ucznia w bazie danych.
+        </p>
+
+        <h5 class="text-center">Kod:</h5>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">public</span> <span class="kwrd">partial</span> <span class="kwrd">class</span> StudentEnumeration : Form
+    {
+        List&lt;Students&gt; StudentsList;
+            <span class="kwrd">public</span> StudentEnumeration()
+        {
+            InitializeComponent();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> FillStudentsTable(ListView listview)
+        {
+            <span class="kwrd">var</span> LoadStudents = <span class="kwrd">new</span> StudentList();
+            <span class="kwrd">this</span>.StudentsList = LoadStudents.StudentsPickList;
+
+            listview.Items.Clear();
+
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> student <span class="kwrd">in</span> StudentsList)
+            {
+            <span class="kwrd">var</span> item = <span class="kwrd">new</span> ListViewItem(student.Id.ToString());
+                item.SubItems.Add(student.Name);
+                item.SubItems.Add(student.Surname);
+                item.SubItems.Add(student.PhoneNumber.ToString());
+                item.SubItems.Add(student.City);
+                item.SubItems.Add(student.Street);
+                item.SubItems.Add(student.Level);
+                item.SubItems.Add(student.SchoolClass.ToString());
+                item.SubItems.Add(student.CreatedDate.ToString(<span class="str">"dd-MM-yyyy"</span>));
+
+                listview.Items.Add(item);
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> StudentEnumeration_Load(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            FillStudentsTable(lv_StudentList);
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> dodajUczniaToolStripMenuItem_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            AddStudent AddStudentForm = <span class="kwrd">new</span> AddStudent();
+            AddStudentForm.Show();
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> usuńToolStripMenuItem_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> DB = <span class="kwrd">new</span> PrivateLessonsEntities())
+            {
+            <span class="kwrd">var</span> studentId = <span class="kwrd">int</span>.Parse(lv_StudentList.SelectedItems[0].Text);
+
+
+            <span class="kwrd">var</span> StudentToRemove = DB.Students.FirstOrDefault(s =&gt; s.Id == studentId);
+
+                DB.Students.Remove(StudentToRemove);
+                DB.SaveChanges();
+            }
+
+            FillStudentsTable(lv_StudentList);
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> pb_Refresh_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            FillStudentsTable(lv_StudentList);
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> pb_Search_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            <span class="kwrd">var</span> searchValue = tb_Search.Text;
+
+            <span class="kwrd">using</span> (<span class="kwrd">var</span> DB = <span class="kwrd">new</span> PrivateLessonsEntities())
+            {
+            <span class="kwrd">var</span> searchList = DB.Students.Where(
+                                                    s =&gt; s.Name.Contains(searchValue) ||
+                                                    s.Surname.Contains(searchValue) ||
+                                                    s.City.Contains(searchValue) ||
+                                                    s.Street.Contains(searchValue) ||
+                                                    s.Level.Contains(searchValue) ||
+                                                    s.Comment.Contains(searchValue)
+                                                    );
+
+                lv_StudentList.Items.Clear();
+
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> student <span class="kwrd">in</span> searchList)
+                {
+            <span class="kwrd">var</span> item = <span class="kwrd">new</span> ListViewItem(student.Id.ToString());
+                    item.SubItems.Add(student.Name);
+                    item.SubItems.Add(student.Surname);
+                    item.SubItems.Add(student.PhoneNumber.ToString());
+                    item.SubItems.Add(student.City);
+                    item.SubItems.Add(student.Street);
+                    item.SubItems.Add(student.Level);
+                    item.SubItems.Add(student.SchoolClass.ToString());
+                    item.SubItems.Add(student.CreatedDate.ToString(<span class="str">"dd-MM-yyyy"</span>));
+
+                    lv_StudentList.Items.Add(item);
+                }
+            }
+        }
+
+            <span class="kwrd">private</span> <span class="kwrd">void</span> edytujToolStripMenuItem_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+            EditStudent EditStudentForm = <span class="kwrd">new</span> EditStudent(<span class="kwrd">int</span>.Parse(lv_StudentList.SelectedItems[0].Text));
+            EditStudentForm.Show();
+        }
+
+
+    }
+</pre>
+
+        </div>
+    </div>
+</div>
+
+<div class="line"></div>
+
+<a name="EditStudent"></a>
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <h3 class="text-center">Edycja uczniów:</h3>
+
+            <img src="~/Resources/EditHourWinForms.jpg" class="img-responsive center-block" />
+
+            <h5 class="text-center">Opis funkcji zmiana parametrów uczniów:</h5>
+            <p class="text-justify">
+                Właściwie opis tej funkcji był już wyżej więc podam tylko kod.
+            </p>
+
+            <h5 class="text-center">Kod:</h5>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">C# code</h3>
+                </div>
+
+                <pre class="csharpcode">
+<span class="kwrd">public</span> <span class="kwrd">partial</span> <span class="kwrd">class</span> EditStudent : Form
+    {
+                <span class="kwrd">int</span> StudentId;
+                <span class="kwrd">public</span> EditStudent(<span class="kwrd">int</span> studentId)
+        {
+            InitializeComponent();
+                <span class="kwrd">this</span>.StudentId = studentId;
+        }
+
+                <span class="kwrd">private</span> <span class="kwrd">void</span> chb_EName_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+                <span class="kwrd">if</span> (chb_EName.Checked == <span class="kwrd">true</span>)
+            {
+                tb_Name.Enabled = <span class="kwrd">true</span>;
+            }
+                <span class="kwrd">else</span>
+            {
+                tb_Name.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+                <span class="kwrd">private</span> <span class="kwrd">void</span> chb_ESurname_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+                <span class="kwrd">if</span> (chb_ESurname.Checked == <span class="kwrd">true</span>)
+            {
+                tb_Surname.Enabled = <span class="kwrd">true</span>;
+            }
+                <span class="kwrd">else</span>
+            {
+                tb_Surname.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+                <span class="kwrd">private</span> <span class="kwrd">void</span> chb_EPhone_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+                <span class="kwrd">if</span> (chb_EPhone.Checked == <span class="kwrd">true</span>)
+            {
+                tb_PhoneNumber.Enabled = <span class="kwrd">true</span>;
+            }
+                <span class="kwrd">else</span>
+            {
+                tb_PhoneNumber.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+                <span class="kwrd">private</span> <span class="kwrd">void</span> chb_EAdress_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+                <span class="kwrd">if</span> (chb_EAdress.Checked == <span class="kwrd">true</span>)
+            {
+                tb_City.Enabled = <span class="kwrd">true</span>;
+                tb_Street.Enabled = <span class="kwrd">true</span>;
+            }
+                <span class="kwrd">else</span>
+            {
+                tb_City.Enabled = <span class="kwrd">false</span>;
+                tb_Street.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+                <span class="kwrd">private</span> <span class="kwrd">void</span> ch_ELevel_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+                <span class="kwrd">if</span> (ch_ELevel.Checked == <span class="kwrd">true</span>)
+            {
+                cb_Level.Enabled = <span class="kwrd">true</span>;
+            }
+                <span class="kwrd">else</span>
+            {
+                cb_Level.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+                <span class="kwrd">private</span> <span class="kwrd">void</span> ch_EClass_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+                <span class="kwrd">if</span> (ch_EClass.Checked == <span class="kwrd">true</span>)
+            {
+                cb_Class.Enabled = <span class="kwrd">true</span>;
+            }
+                <span class="kwrd">else</span>
+            {
+                cb_Class.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+                <span class="kwrd">private</span> <span class="kwrd">void</span> ch_EComment_CheckedChanged(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+                <span class="kwrd">if</span> (ch_EComment.Checked == <span class="kwrd">true</span>)
+            {
+                tb_Comment.Enabled = <span class="kwrd">true</span>;
+            }
+                <span class="kwrd">else</span>
+            {
+                tb_Comment.Enabled = <span class="kwrd">false</span>;
+            }
+        }
+
+                <span class="kwrd">private</span> <span class="kwrd">void</span> Submit_Click(<span class="kwrd">object</span> sender, EventArgs e)
+        {
+
+                <span class="kwrd">if</span> (AddStudentValidation.ValidateStudentData(tb_Name, tb_Surname, tb_PhoneNumber, tb_City, tb_Street, cb_Level, cb_Class))
+            {
+                <span class="kwrd">string</span> message = <span class="str">"Czy wszystkie wprowadzone zmiany są poprawne?"</span>;
+                <span class="kwrd">const</span> <span class="kwrd">string</span> caption = <span class="str">"Form Closing"</span>;
+                <span class="kwrd">var</span> result = MessageBox.Show(message, caption,
+                                             MessageBoxButtons.YesNo,
+                                             MessageBoxIcon.Question);
+                <span class="kwrd">if</span> (result == DialogResult.Yes)
+                {
+                <span class="kwrd">using</span> (<span class="kwrd">var</span> DB = <span class="kwrd">new</span> PrivateLessonsEntities())
+                    {
+                <span class="kwrd">var</span> StudentToEdit = DB.Students.Single(s =&gt; s.Id == StudentId);
+                <span class="kwrd">if</span> (tb_Name.Enabled == <span class="kwrd">true</span>)
+                        {
+                            StudentToEdit.Name = tb_Name.Text;
+                        }
+
+                <span class="kwrd">if</span> (tb_Surname.Enabled == <span class="kwrd">true</span>)
+                        {
+                            StudentToEdit.Surname = tb_Surname.Text;
+                        }
+
+                <span class="kwrd">if</span> (tb_PhoneNumber.Enabled == <span class="kwrd">true</span>)
+                        {
+                            StudentToEdit.PhoneNumber = <span class="kwrd">int</span>.Parse(tb_PhoneNumber.Text);
+                        }
+
+                <span class="kwrd">if</span> (tb_Street.Enabled == <span class="kwrd">true</span> &amp;&amp; tb_City.Enabled == <span class="kwrd">true</span>)
+                        {
+                            StudentToEdit.Street = tb_Street.Text;
+                            StudentToEdit.City = tb_Street.Text;
+                        }
+                <span class="kwrd">if</span> (cb_Level.Enabled == <span class="kwrd">true</span>)
+                        {
+                            StudentToEdit.Level = cb_Level.Text;
+                        }
+                <span class="kwrd">if</span> (cb_Class.Enabled == <span class="kwrd">true</span>)
+                        {
+                            StudentToEdit.SchoolClass = <span class="kwrd">int</span>.Parse(cb_Class.Text);
+                        }
+                <span class="kwrd">if</span> (tb_Comment.Enabled == <span class="kwrd">true</span>)
+                        {
+                            StudentToEdit.Comment = tb_Comment.Text;
+                        }
+
+                        StudentToEdit.StudentDescription = StudentToEdit.Surname + <span class="str">" "</span> + StudentToEdit.Name + <span class="str">" "</span> + StudentToEdit.City;
+
+                        DB.SaveChanges();
+                    }
+
+                    result = MessageBox.Show(<span class="str">"Pomyślnie edytowano dane ucznia"</span>);
+                }
+            }
+        }
+    }</pre>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="line"></div>
+
+<a name="Summary"></a>
+    <div class="row">
+        <div class="col-sm-12">
+
+            <h1 class="text-center">Podsumowanie</h1>
+
+            <h5 class="text-left">Spis wszystkich funcjonalności:</h5>
+
+
+            <ul>
+                <li>dodawanie/usuwanie uczniów</li>
+                <li>dodawanie/usuwanie zajęć</li>
+                <li>wyświetlanie grafiku zajęć</li>
+                <li>wyświetlanie spisu uczniów</li>
+                <li>edycja danych uczniów</li>
+                <li>edycja parametrów zajęć</li>
+            </ul>
+            <br />
+
+
+            <div class="col-sm-6">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Zalety:</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <ul>
+                            <li>DZIAŁA!</li>
+                            <li>ciekawe funkcjonalności</li>
+                            <li>praktyczna i użyteczna</li>
+                            <li>prosty i intuicyjny interface</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Wady:</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            <li>niestosowanie się do zasad SOLID</li>
+                            <li>miejscami chaotyczny kod</li>
+                            <li>baaaardzo długie metody</li>
+                            <li>brak podziału na mniejsze klasy</li>
+                            <li>testowanie tego programu było by bardzo uciążliwe</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-justify">
+                Słowem zakończenia aplikacja ma trochę wad a zwłaszcza w kodzie który nie jest przyjazny. Bardzo ciężko byłoby tą aplikację testować, utrzymywać i rozwijać.
+                Dla mnie najważniejsze jest wyciągnąć z tego wnioski i uczyć się dalej. Z C# mam do czynienia dość krótki okres czasu bo około dwóch miesięcy ale wydaje mi się, że wszystko
+                idzie w dobrą stronę. Będę wdzięczny za każdy feedback.
+
+            </p>
+            <address>
+                Kontaktować się można ze mną drogą mailową:
+
+                Lukasz.Grzegorz.Brzezinski@gmail.com
+            </address>
+        </div>
+    </div>
+
+    <div style="font-size:5px;"></div>
+    * C# code formatted by http://manoli.net/csharpformat/

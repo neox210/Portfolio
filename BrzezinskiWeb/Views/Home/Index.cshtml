@@ -1,0 +1,47 @@
+﻿@section scripts {
+    <script>
+
+        var jumboHeight = $('.jumbotron').outerHeight();
+        function parallax() {
+            var scrolled = $(window).scrollTop();
+            $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+        }
+
+        $(window).scroll(function (e) {
+            parallax();
+        });
+    </script>
+}
+
+<div class="bg"></div>
+<div class="jumbotron">
+    <h1 style="color:gainsboro">Łukasz Brzeziński</h1>
+    <p class="lead" style="color:darkgrey">.NET Portfolio</p>
+
+    <div class="well well-sm pull-right" style="background-color:rgba(245, 245, 245, 0.5); text-shadow: 0px 0px #000000;; ">
+        <blockquote class="blockquote-reverse" style="margin-bottom:0px;">
+            <p style=" color:#585858; font-size:15px;">Każda praca jest dobra, o ile jest dobrze wykonywana.</p>
+            <small><cite title="Source Title">Albert Einstein</cite></small>
+        </blockquote>
+    </div>
+</div>
+
+
+<div class="row" style="margin-top:10px">
+    <div class="col-md-4 text-center img-hover">
+        <h2>Projekty</h2>
+        <img src="~/Resources/dev-icon.png" alt="Responsive image" class="img-circle" style="margin-top:10px" onclick="location.href='@Url.Action("Index", "Projects")'">
+    </div>
+
+    <div class="col-md-4 text-center img-hover">
+        <h2>Kontakt</h2>
+        <img src="~/Resources/mail-icon.png" alt="Responsive image" class="img-circle" style="margin-top:10px" onclick="location.href='@Url.Action("Contact", "Home")'">
+    </div>
+
+    <div class="col-md-4 text-center img-hover">
+        <h2>Życiorys</h2>
+      
+        <img src="~/Resources/CVV.png" alt="Responsive image" class="img-circle" style="margin-top:10px" onclick="location.href='@Url.Action("About", "Home")#CV'">
+    </div>
+</div>
+

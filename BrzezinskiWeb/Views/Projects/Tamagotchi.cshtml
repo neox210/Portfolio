@@ -1,0 +1,635 @@
+﻿@section scripts {
+    <script>
+
+        var jumboHeight = $('.jumbotron').outerHeight();
+        function parallax() {
+            var scrolled = $(window).scrollTop();
+            $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+        }
+
+        $(window).scroll(function (e) {
+            parallax();
+        });
+    </script>
+}
+
+<div class="bg" style="background: url('../Resources/pencil-1891732_1920.jpg') no-repeat center center;"></div>
+<div class="jumbotron text-center">
+    <h1 class="text-center" style="color:gainsboro; margin-top:100px; ">Tamagotchi</h1>
+    <br />
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+
+        <img src="~/Resources/Tamagotchi.jpg" class="img-responsive center-block" />
+
+        <h1 class="text-center">Opis Aplikacji:</h1>
+
+        <p class="text-justify">
+            Aplikacja stworzona w celach edukacyjnych. Głównym celem było poćwiczenie dziedziczenia klass i enumów. Jest to prosty programik, w którym mozemy karmić
+            bawićs się ze swoim zwierzakiem itp. Jak to w tamagoczi bywa nasz pupil może być smutny, głodny, chory lub w najgorszym przypadku - umrzeć.
+
+            Tutaj specjalnie wizualnych wodotrysków nie uświadczymy dlatego też będzie więcej kodu niż zdjęć programu.
+        </p>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code: Program główny</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">class</span> Program
+    {
+            <span class="kwrd">static</span> <span class="kwrd">void</span> Main(<span class="kwrd">string</span>[] args)
+        {
+            ConsoleSettings.ConsoleSet();
+            <span class="kwrd">var</span> engine = <span class="kwrd">new</span> DogEngine();
+
+                engine.DogMain();
+        }
+    }</pre>
+
+        </div>
+
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code: DogEngine</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">public</span> <span class="kwrd">class</span> DogEngine
+    {
+        Dog Dog = <span class="kwrd">new</span> Dog(<span class="str">"Puszek"</span>);
+        
+            <span class="kwrd">public</span> <span class="kwrd">void</span> DogMain()
+        {
+            while (<span class="kwrd">true</span>)
+            {
+            <span class="rem">// DogDisplayStats();</span>
+                DogScreenASCII.DisplayDogMenuFrame();
+                DogScreenASCII.DisplayDogFace(Dog.Health);
+                DogScreenASCII.DisplayDogHealth(Dog.Health);
+                DogScreenASCII.DisplayDogEnergy(Dog.Energy);
+                DogScreenASCII.DisplayDogHunger(Dog.Hunger);
+                DogScreenASCII.DisplayDogHappiness(Dog.Happiness);
+                DogScreenASCII.DisplayDogHygiene(Dog.Hygiene);
+                DogScreenASCII.DisplayDogIllnesse(Dog.Illnesses);
+                DogScreenASCII.DiplayDayTime(Dog.Age, Dog.Rounds);
+
+                Console.WriteLine();
+                DogDiplayMoves();
+            <span class="kwrd">var</span> number = Console.ReadLine();
+            <span class="kwrd">var</span> checkNumber = <span class="kwrd">int</span>.TryParse(number, <span class="kwrd">out</span> <span class="kwrd">int</span> deafult);
+            <span class="kwrd">if</span> (checkNumber)
+                {
+            <span class="kwrd">var</span> option = <span class="kwrd">int</span>.Parse(number);
+            <span class="kwrd">switch</span> (option)
+                    {
+            <span class="kwrd">case</span> 1:
+                            Dog.Feed();
+            <span class="kwrd">break</span>;
+            <span class="kwrd">case</span> 2:
+                            Dog.Bath();
+            <span class="kwrd">break</span>;
+            <span class="kwrd">case</span> 3:
+                            Dog.Play();
+            <span class="kwrd">break</span>;
+            <span class="kwrd">case</span> 4:
+                            Dog.Clean();
+            <span class="kwrd">break</span>;
+            <span class="kwrd">case</span> 5:
+                            Dog.Heal();
+            <span class="kwrd">break</span>;
+            <span class="kwrd">case</span> 6:
+                            Dog.Sleep();
+            <span class="kwrd">break</span>;
+                    }
+                    Dog.CheckModifiedStats();
+                    Dog.HealthControl();
+            <span class="kwrd">if</span> (Dog.Death())
+                    {
+                        Console.Clear();
+                        Death.DeadSkull();
+                        Console.ReadKey();
+            <span class="kwrd">break</span>;
+                    }
+                    Console.SetCursorPosition(73, 18);
+                    Console.WriteLine(<span class="str">"enter any key"</span>);
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+            <span class="kwrd">else</span>
+                {
+                    Console.WriteLine(<span class="str">"please enter number"</span>);
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+
+
+            }
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> DogDisplayStats()
+        {
+            Console.WriteLine(<span class="str">"name: "</span> + Dog.Name);
+            Console.WriteLine(<span class="str">"Age: "</span> + Dog.Age);
+            Console.WriteLine(<span class="str">"Health: "</span> + Dog.Health);
+            Console.WriteLine(<span class="str">"Energy: "</span> + Dog.Energy);
+            Console.WriteLine(<span class="str">"Happiness: "</span> + Dog.Happiness);
+            Console.WriteLine(<span class="str">"Hunger: "</span> + Dog.Hunger);
+            Console.WriteLine(<span class="str">"Hygiene: "</span> + Dog.Hygiene);
+            Console.WriteLine(<span class="str">"Illnesses: "</span> + Dog.Illnesses);
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> DogDiplayMoves()
+        {
+            Console.SetCursorPosition(73, 4);
+            Console.WriteLine(<span class="str">"1 - Feed"</span>);
+            Console.SetCursorPosition(73, 5);
+            Console.WriteLine(<span class="str">"2 - Bath"</span>);
+            Console.SetCursorPosition(73, 6);
+            Console.WriteLine(<span class="str">"3 - Play"</span>);
+            Console.SetCursorPosition(73, 7);
+            Console.WriteLine(<span class="str">"4 - Clean"</span>);
+            Console.SetCursorPosition(73, 8);
+            Console.WriteLine(<span class="str">"5 - Heal"</span>);
+            Console.SetCursorPosition(73, 9);
+            Console.WriteLine(<span class="str">"6 - Sleep"</span>);
+            Console.SetCursorPosition(73, 10);
+        }
+
+    }</pre>
+
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code: Klasa Animal po której dziedziczy Dog</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">using</span> System;
+<span class="kwrd">using</span> System.Collections.Generic;
+<span class="kwrd">using</span> System.Linq;
+<span class="kwrd">using</span> System.Text;
+<span class="kwrd">using</span> System.Threading.Tasks;
+
+<span class="kwrd">namespace</span> Tamagotchi
+{
+            <span class="kwrd">public</span> <span class="kwrd">abstract</span> <span class="kwrd">class</span> Animal
+    {
+            <span class="kwrd">public</span> <span class="kwrd">int</span> Health { <span class="kwrd">get</span>; <span class="kwrd">private</span> <span class="kwrd">set</span>; }
+            <span class="kwrd">public</span> <span class="kwrd">int</span> Energy { <span class="kwrd">get</span>; <span class="kwrd">private</span> <span class="kwrd">set</span>; }
+            <span class="kwrd">public</span> <span class="kwrd">int</span> Hunger { <span class="kwrd">get</span>; <span class="kwrd">private</span> <span class="kwrd">set</span>; }
+            <span class="kwrd">public</span> <span class="kwrd">int</span> Happiness { <span class="kwrd">get</span>; <span class="kwrd">private</span> <span class="kwrd">set</span>; }
+            <span class="kwrd">public</span> <span class="kwrd">int</span> Hygiene { <span class="kwrd">get</span>; <span class="kwrd">private</span> <span class="kwrd">set</span>; }
+            <span class="kwrd">public</span> <span class="kwrd">int</span> Illnesses { <span class="kwrd">get</span>; <span class="kwrd">private</span> <span class="kwrd">set</span>; }
+            <span class="kwrd">public</span> <span class="kwrd">int</span> Age { <span class="kwrd">get</span> { <span class="kwrd">return</span> Rounds / 24; } }
+            <span class="kwrd">public</span> <span class="kwrd">int</span> Rounds { <span class="kwrd">get</span>; <span class="kwrd">private</span> <span class="kwrd">set</span>; }
+            <span class="kwrd">public</span> <span class="kwrd">string</span> Name { <span class="kwrd">get</span>; <span class="kwrd">private</span> <span class="kwrd">set</span>; }
+
+            <span class="kwrd">public</span> <span class="kwrd">abstract</span> <span class="kwrd">void</span> Feed();
+            <span class="kwrd">public</span> <span class="kwrd">abstract</span> <span class="kwrd">void</span> Sleep();
+            <span class="kwrd">public</span> <span class="kwrd">abstract</span> <span class="kwrd">void</span> Clean();
+            <span class="kwrd">public</span> <span class="kwrd">abstract</span> <span class="kwrd">void</span> Heal();
+            <span class="kwrd">public</span> <span class="kwrd">abstract</span> <span class="kwrd">void</span> Bath();
+            <span class="kwrd">public</span> <span class="kwrd">abstract</span> <span class="kwrd">void</span> Play();
+
+
+            <span class="rem">// Set start pet parameters </span>
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SetHealth(<span class="kwrd">int</span> health)
+        {
+            <span class="kwrd">this</span>.Health = health;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SetEnergy(<span class="kwrd">int</span> energy)
+        {
+            <span class="kwrd">this</span>.Energy = energy;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SetHunger(<span class="kwrd">int</span> hunger)
+        {
+            <span class="kwrd">this</span>.Hunger = hunger;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SetHappiness(<span class="kwrd">int</span> happiness)
+        {
+            <span class="kwrd">this</span>.Happiness = happiness;
+        }
+        
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SetHygiene(<span class="kwrd">int</span> hygiene)
+        {
+            <span class="kwrd">this</span>.Hygiene = hygiene;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SetIllnesses(<span class="kwrd">int</span> illnesses)
+        {
+            <span class="kwrd">this</span>.Illnesses = illnesses;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SetRound(<span class="kwrd">int</span> round)
+        {
+            <span class="kwrd">this</span>.Rounds = round;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SetName(<span class="kwrd">string</span> name)
+        {
+            <span class="kwrd">this</span>.Name = name;
+        }
+
+            <span class="rem">//Incrase pet parameters</span>
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> AddHealth(<span class="kwrd">int</span> health)
+        {
+            <span class="kwrd">this</span>.Health += health;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> AddEnergy(<span class="kwrd">int</span> energy)
+        {
+            <span class="kwrd">this</span>.Energy += energy;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> AddHunger(<span class="kwrd">int</span> hunger)
+        {
+            <span class="kwrd">this</span>.Hunger += hunger;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> AddHappiness(<span class="kwrd">int</span> happiness)
+        {
+            <span class="kwrd">this</span>.Happiness += happiness;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> AddHygiene(<span class="kwrd">int</span> hygiene)
+        {
+            <span class="kwrd">this</span>.Hygiene += hygiene;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> AddIllnesses(<span class="kwrd">int</span> illnesses)
+        {
+            <span class="kwrd">this</span>.Illnesses += illnesses;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> AddRound(<span class="kwrd">int</span> round)
+        {
+            <span class="kwrd">this</span>.Rounds += round;
+        }
+
+            <span class="rem">// Decarase pet parameters </span>
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SubtractHealth(<span class="kwrd">int</span> health)
+        {
+            <span class="kwrd">this</span>.Health -= health;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SubtractEnergy(<span class="kwrd">int</span> energy)
+        {
+            <span class="kwrd">this</span>.Energy -= energy;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SubtractHunger(<span class="kwrd">int</span> hunger)
+        {
+            <span class="kwrd">this</span>.Hunger -= hunger;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SubtractHappiness(<span class="kwrd">int</span> happiness)
+        {
+            <span class="kwrd">this</span>.Happiness -= happiness;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SubtractHygiene(<span class="kwrd">int</span> hygiene)
+        {
+            <span class="kwrd">this</span>.Hygiene -= hygiene;
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> SubtractIllnesses(<span class="kwrd">int</span> illnesses)
+        {
+            <span class="kwrd">this</span>.Illnesses -= illnesses;
+        }
+
+    }
+
+    
+}
+</pre>
+
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code: Klasa Dog</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">public</span> <span class="kwrd">class</span> Dog : Animal
+    {
+        DisplayDogActions Display = <span class="kwrd">new</span> DisplayDogActions();
+        DogActionsModifiers Mod = <span class="kwrd">new</span> DogActionsModifiers();
+        DogAgeControl ModControl = <span class="kwrd">new</span> DogAgeControl();
+        DisplayDogAgeControls DisplayControls = <span class="kwrd">new</span> DisplayDogAgeControls();
+        HealthModifier HelathModifier = <span class="kwrd">new</span> HealthModifier();
+        
+
+            <span class="kwrd">public</span> Dog(<span class="kwrd">string</span> name)
+        {
+            SetHealth(100);
+            SetEnergy(100);
+            SetHunger(50);
+            SetHappiness(30);
+            SetHygiene(30);
+            SetIllnesses(0);
+            SetRound(0);
+            SetName(name);
+            
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Bath()
+        {
+            Display.DisplayBath();
+
+            <span class="kwrd">var</span> option = Console.ReadLine();
+            <span class="kwrd">var</span> optionCheck = <span class="kwrd">int</span>.TryParse(option, <span class="kwrd">out</span> <span class="kwrd">int</span> deafult);
+            <span class="kwrd">if</span> (optionCheck)
+            {
+            <span class="kwrd">var</span> bathOption = <span class="kwrd">int</span>.Parse(option);
+            <span class="kwrd">if</span> (ModControl.BathControl(<span class="kwrd">this</span>.Age, bathOption) == <span class="kwrd">true</span>)
+                {
+            <span class="kwrd">var</span> Modifiers = Mod.Bath(bathOption).Split(<span class="str">' '</span>);
+                    CheckEnergy(Modifiers);
+                }
+
+            <span class="kwrd">else</span>
+                {
+                    DisplayControls.DisplayBathControl(bathOption);
+                }
+            }
+            <span class="kwrd">else</span>
+            {
+                Console.WriteLine(<span class="str">"please enter valid number"</span>);
+            }
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Clean()
+        {
+            <span class="kwrd">var</span> Modifiers = Mod.Clean().Split(<span class="str">' '</span>);
+            CheckEnergy(Modifiers);
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Feed()
+        {
+            Display.DisplayFeed();
+
+            <span class="kwrd">var</span> option = Console.ReadLine();
+            <span class="kwrd">var</span> optionCheck = <span class="kwrd">int</span>.TryParse(option, <span class="kwrd">out</span> <span class="kwrd">int</span> deafult);
+            <span class="kwrd">if</span> (optionCheck)
+            {
+            <span class="kwrd">var</span> feedOption = <span class="kwrd">int</span>.Parse(option);
+            <span class="kwrd">if</span> (ModControl.FeedControl(<span class="kwrd">this</span>.Age, feedOption) == <span class="kwrd">true</span>)
+                {
+            <span class="kwrd">var</span> Modifiers = Mod.Feed(feedOption).Split(<span class="str">' '</span>);
+                    CheckEnergy(Modifiers);
+                }
+            <span class="kwrd">else</span>
+                {
+                    DisplayControls.DisplayFeedControl(feedOption);
+                }
+            }
+            <span class="kwrd">else</span>
+            {
+                Console.WriteLine(<span class="str">"please enter valid number"</span>);
+            }
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Heal()
+        {
+            Display.DisplayHeal();
+
+            <span class="kwrd">var</span> option = Console.ReadLine();
+            <span class="kwrd">var</span> optionCheck = <span class="kwrd">int</span>.TryParse(option, <span class="kwrd">out</span> <span class="kwrd">int</span> deafult);
+            <span class="kwrd">if</span> (optionCheck)
+            {
+            <span class="kwrd">var</span> healOption = <span class="kwrd">int</span>.Parse(option);
+            <span class="kwrd">if</span> (ModControl.HealControl(<span class="kwrd">this</span>.Age, healOption) == <span class="kwrd">true</span>)
+                {
+            <span class="kwrd">var</span> Modifiers = Mod.Heal(healOption).Split(<span class="str">' '</span>);
+                    CheckEnergy(Modifiers);
+            <span class="kwrd">try</span>
+                    {
+            <span class="kwrd">var</span> nothingInfo = Modifiers[7].Split(<span class="str">'_'</span>);
+            <span class="kwrd">foreach</span> (<span class="kwrd">var</span> word <span class="kwrd">in</span> nothingInfo)
+                        {
+                            Console.Write($<span class="str">"{word} "</span>);
+                        }
+                    }
+            <span class="kwrd">catch</span> { }
+                }
+            <span class="kwrd">else</span>
+                {
+                    DisplayControls.DisplayHealControl(healOption);
+                }
+            }
+            <span class="kwrd">else</span>
+            {
+                Console.WriteLine(<span class="str">"please enter valid number"</span>);
+            }
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Play()
+        {
+            Display.DisplayPlay();
+
+            <span class="kwrd">var</span> option = Console.ReadLine();
+            <span class="kwrd">var</span> optionCheck = <span class="kwrd">int</span>.TryParse(option, <span class="kwrd">out</span> <span class="kwrd">int</span> deafult);
+            <span class="kwrd">if</span> (optionCheck)
+            {
+            <span class="kwrd">var</span> playOption = <span class="kwrd">int</span>.Parse(option);
+            <span class="kwrd">if</span> (ModControl.PlayControl(<span class="kwrd">this</span>.Age, playOption) == <span class="kwrd">true</span>)
+                {
+            <span class="kwrd">var</span> Modifiers = Mod.Play(playOption).Split(<span class="str">' '</span>);
+                    CheckEnergy(Modifiers);
+                }
+            <span class="kwrd">else</span>
+                {
+                    DisplayControls.DisplayPlayControl(playOption);
+                }
+            }
+            <span class="kwrd">else</span>
+            {
+                Console.WriteLine(<span class="str">"please enter valid number"</span>);
+            }
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">override</span> <span class="kwrd">void</span> Sleep()
+        {
+            Display.DisplaySleep();
+
+            <span class="kwrd">var</span> option = Console.ReadLine();
+            <span class="kwrd">var</span> optionCheck = <span class="kwrd">int</span>.TryParse(option, <span class="kwrd">out</span> <span class="kwrd">int</span> deafult);
+            <span class="kwrd">if</span> (optionCheck)
+            {
+            <span class="kwrd">var</span> sleepOption = <span class="kwrd">int</span>.Parse(option);
+                Console.SetCursorPosition(73, 16);
+                Console.WriteLine(<span class="str">"How many hours?"</span>);
+                Console.SetCursorPosition(73, 17);
+            <span class="kwrd">var</span> option2 = Console.ReadLine();
+            <span class="kwrd">var</span> option2Check = <span class="kwrd">int</span>.TryParse(option2, <span class="kwrd">out</span> <span class="kwrd">int</span> deafult2);
+            <span class="kwrd">if</span> (option2Check)
+                {
+            <span class="kwrd">var</span> hours = <span class="kwrd">int</span>.Parse(option2);
+            <span class="kwrd">if</span> (ModControl.SleepControl(<span class="kwrd">this</span>.Age, sleepOption) == <span class="kwrd">true</span>)
+                    {
+            <span class="kwrd">var</span> Modifiers = Mod.Sleep(sleepOption, hours).Split(<span class="str">' '</span>);
+                        ModifyDog(Modifiers);
+                    }
+            <span class="kwrd">else</span>
+                    {
+                        DisplayControls.DisplayFeedControl(sleepOption);
+                    }
+                }
+            <span class="kwrd">else</span>
+                {
+                    Console.WriteLine(<span class="str">"please enter valid number"</span>);
+                }
+            }
+            <span class="kwrd">else</span>
+            {
+                Console.WriteLine(<span class="str">"please enter valid number"</span>);
+            }
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> ModifyDog(<span class="kwrd">string</span>[] Modifiers)
+        {
+            AddHealth(<span class="kwrd">int</span>.Parse(Modifiers[0]));
+            AddEnergy(<span class="kwrd">int</span>.Parse(Modifiers[1]));
+            AddHunger(<span class="kwrd">int</span>.Parse(Modifiers[2]));
+            AddHappiness(<span class="kwrd">int</span>.Parse(Modifiers[3]));
+            AddHygiene(<span class="kwrd">int</span>.Parse(Modifiers[4]));
+            AddIllnesses(<span class="kwrd">int</span>.Parse(Modifiers[5]));
+            AddRound(<span class="kwrd">int</span>.Parse(Modifiers[6]));
+        }
+        
+            <span class="kwrd">public</span> <span class="kwrd">void</span> CheckModifiedStats()
+        {
+            <span class="kwrd">if</span> (<span class="kwrd">this</span>.Health&gt;100)
+            {
+                SetHealth(100);
+            }
+            <span class="kwrd">if</span> (<span class="kwrd">this</span>.Energy&gt;100)
+            {
+                SetEnergy(100);
+            }
+            <span class="kwrd">if</span> (<span class="kwrd">this</span>.Happiness&gt;100)
+            {
+                SetHappiness(100);
+            }
+            <span class="kwrd">if</span> (<span class="kwrd">this</span>.Hunger&lt;0)
+            {
+                SetHunger(0);
+            }
+            <span class="kwrd">if</span> (<span class="kwrd">this</span>.Hygiene&gt;100)
+            {
+                SetHygiene(100);
+            }
+            <span class="kwrd">if</span> (<span class="kwrd">this</span>.Illnesses&lt;0)
+            {
+                SetIllnesses(0);
+            }
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> CheckEnergy(<span class="kwrd">string</span>[] modifiers)
+        {
+            <span class="kwrd">if</span> ( !(<span class="kwrd">this</span>.Energy + (<span class="kwrd">int</span>.Parse(modifiers[1])) &lt; 0))
+            {
+                ModifyDog(modifiers); 
+            }
+            <span class="kwrd">else</span>
+            {
+                Console.WriteLine(<span class="str">"Your Dog don't have enough energy"</span>);
+            }
+
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">void</span> HealthControl()
+        {
+            <span class="kwrd">var</span> newHealth = HelathModifier.HealthChange(<span class="kwrd">this</span>.Energy, <span class="kwrd">this</span>.Hunger, <span class="kwrd">this</span>.Happiness, <span class="kwrd">this</span>.Hygiene, <span class="kwrd">this</span>.Illnesses, <span class="kwrd">this</span>.Age).Split(<span class="str">' '</span>);
+            ModifyDog(newHealth);
+        }
+
+            <span class="kwrd">public</span> <span class="kwrd">bool</span> Death()
+        {
+            <span class="kwrd">if</span> (<span class="kwrd">this</span>.Health&lt;=0)
+            {
+            <span class="kwrd">return</span> <span class="kwrd">true</span>;
+            }
+            <span class="kwrd">return</span> <span class="kwrd">false</span>;
+        }
+    }</pre>
+
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">C# code: Enumeracja zachowań zwierzaka</h3>
+            </div>
+
+<pre class="csharpcode">
+<span class="kwrd">public</span> <span class="kwrd">enum</span> DogFood
+    {
+        
+        Bone=1,
+        Cookie,
+        DogFood,
+        PostMan
+    }
+
+            <span class="kwrd">public</span> <span class="kwrd">enum</span> DogMedicines
+    {
+        Apap=1,
+        Vet,
+        Injection,
+        Nothing
+    }
+
+            <span class="kwrd">public</span> <span class="kwrd">enum</span> DogSleepPlaces
+    {
+        Floor=1,
+        DogBed,
+        HumanBed,
+        Outside
+    }
+
+            <span class="kwrd">public</span> <span class="kwrd">enum</span> DogGames
+    {
+        Fetch=1,
+        Run,
+        Walk,
+        Bite
+    }
+
+            <span class="kwrd">public</span> <span class="kwrd">enum</span> DogWashing
+    {
+        River=1,
+        Shower,
+        Bath,
+        Rain
+    }</pre>
+
+        </div>
+
+        <h2 class="text-center" >Podsumowanie:</h2>
+        <p class="text-justify"> Wyszła z tego całkiem ciekawa aplikacja. Była to moja pierwsza bardziej rozbudowana aplikacja, która miała sporo różnych parametrów i w dodatku dziedziczenie. 
+        Pora nauczyć się korzystać z interfaceów i zacząć je częściej implementować w kodzie, ułatwi to testowanie i przejrzystość aplikacji. Nie wklejałem kodu odpowiedzialnego 
+        za wyśietlanie w konsoli bo tam nic ciekawego się nie dzieje.  
+        </p>
+
+        <address>
+            Każdy feedback mile widziany na e-mail: Lukasz.Grzegorz.Brzeinski@gmail.com
+        </address>
+
+        <p style="font-size: 15px">*Kod C# został wygenerowany przy pomocy: http://www.manoli.net/csharpformat/</p>
+        </div>
+</div>
+
+<div class="line"></div>

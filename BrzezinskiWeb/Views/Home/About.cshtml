@@ -1,0 +1,68 @@
+﻿@section scripts {
+    <script>
+
+        var jumboHeight = $('.jumbotron').outerHeight();
+        function parallax() {
+            var scrolled = $(window).scrollTop();
+            $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+        }
+
+        $(window).scroll(function (e) {
+            parallax();
+        });
+    </script>
+}
+<div class="bg" style="background: url('../Resources/weights-1634747_1920.jpg') no-repeat center center;"></div>
+<div class="jumbotron">
+    <h1 style="color:gainsboro; margin-top:100px; ">Poza pracą</h1>
+    <p class="lead" style="color:darkgrey">Trochę sportu się przyda</p>
+
+    <br />
+</div>
+
+<div class="row" style="margin-top:100px; margin-bottom:50px;">
+    <div class="col-sm-8" style="padding:30px;">
+        <h3>Sport:</h3>
+        <p class="text-justify">
+            Chyba jak każdy młody chłopak grałem w piłkę na pobliskim boisku. Z czasem piłka to nie było już to co mnie kręciło chciałem czegoś więcej.
+            Tak więc w wieku 18 lat poszedłem na siłownię i już tam zostałem do dziś. Na początku przez pierwsze dwa lata treningów nawet nie myślałem o zawodach ani tym bardziej
+            o mistrzostwach Polski. Poszedłem na uczelnię i okazało się, że robię całkiem przyzwoite wyniki i uczelniana kadra trójboju siłowego chce mnie wziać na mistrzostwa Pomorza.
+            Pojechałem - zająłem trzecie miejsce i przepustkę na akademickie mistrzostwa Polski. 
+        </p>
+
+    </div>
+
+    <div class="col-sm-4">
+        <img class="img-responsive" src="~/Resources/omnie3.jpg" />
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-sm-4">
+        <img class="img-responsive" src="~/Resources/omnie2.jpg" />
+    </div>
+
+
+    <div class="col-sm-8" style="padding:30px;">
+        <p class="text-justify">
+            Tam już tak "łatwo" nie było. Startowałem w kategori do 93 kg gdzie wyniki dawające szanse
+            na medal zaczynały się od 600 kg a ja wtedy maksymalnie byłem w stanie zrobić 560-570kg. No cóż zająłem wtedy lokatę poza pierwszą dziesiątką ale bardzo miło wspominam pierwsze
+            zawody. Za rok pojechałem drugi raz tym razem o 10 kg lżejszy i trochę silniejszy. Tak też udało mi się wykręcić wynik niecałych 600kg i zająć czwartą lokatę w typach uczelni.
+        </p>
+    </div>
+   
+    </div>
+
+<div class="line"></div>
+
+<a name="CV"></a>
+
+<h2>Curriculum Vitae</h2>
+<div class="col-lg-12">
+    <img class="img-responsive" src="~/Resources/cv.jpg" />
+</div>
+
+
+
+

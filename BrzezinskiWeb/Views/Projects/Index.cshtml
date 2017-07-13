@@ -1,0 +1,148 @@
+﻿@section scripts {
+    <script>
+
+        var jumboHeight = $('.jumbotron').outerHeight();
+        function parallax() {
+            var scrolled = $(window).scrollTop();
+            $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+        }
+
+        $(window).scroll(function (e) {
+            parallax();
+        });
+    </script>
+}
+
+<div class="bg" style="background: url('../Resources/cofee-project.jpg') no-repeat center center;"></div>
+<div class="jumbotron">
+    <h1 style="color:gainsboro">Portfolio</h1>
+    <br />
+    <div class="well well-sm pull-right" style="background-color:rgba(245, 245, 245, 0.5); text-shadow: 0px 0px #000000;; ">
+        <blockquote class="blockquote-reverse" style="margin-bottom:0px;">
+            <p style=" color:#585858; font-size:15px;">If you need more than 3 levels of indentation, you’re screwed anyway, and should fix your program.</p>
+            <small><cite title="Source Title">Linus Torvalds</cite></small>
+        </blockquote>
+    </div>
+</div>
+
+<div class="row">
+    <div class="ProjectImageContainer col-sm-6">
+
+        <a href='@Url.Action("PrivateLessonsWinForms", "Projects")'>
+            <img src="~/Resources/projektKorepetycje.jpg" alt="Avatar" class="ProjectImage img-responsive" style="width:100%">
+            <div class="ProjectMiddle">
+                <div class="ProjectText">Pokaż szczegóły</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-sm-6">
+        
+        <h4>Krótki opis Aplikacji:</h4>
+        <p>Prosta aplikacja do zarządzania korepetycjami.</p>
+
+        <div class="dottedline"></div>
+
+        <h4>Funkcjonalności:</h4>
+        <ul>
+            <li>dodawanie i usuwanie uczniów,</li>
+            <li>dodawanie i usuwanie godzin korepetycji,</li>
+            <li>wyświetlanie grafiku,</li>
+            <li>wyświetlanie spisu ucznów,</li>
+            <li>edycja danych uczniów i zajęć</li>
+        </ul>
+
+        <div class="dottedline"></div>
+
+        <h4>Użyte technologie:</h4>
+        <img class="TechnologyIcon" src="~/Resources/dotnetIcon.png" />
+        <img class="TechnologyIcon" src="~/Resources/entityFrameworkIcon.png" />
+
+    </div>
+</div>
+
+<div class="line"></div>
+
+<div class="row">
+    <div class="ProjectImageContainer col-sm-6">
+
+        <a href='@Url.Action("Tamagotchi", "Projects")'>
+            <img src="~/Resources/Tamagotchi.jpg" alt="Avatar" class="ProjectImage img-responsive" style="width:100%">
+            <div class="ProjectMiddle">
+                <div class="ProjectText">Pokaż szczegóły</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-sm-6">
+
+        <h4>Krótki opis Aplikacji:</h4>
+        <p>Gra Tamagotchi</p>
+
+        <div class="dottedline"></div>
+
+        <h4>Funkcjonalności:</h4>
+        <ul>
+            <li>karmienie zwierzaka,</li>
+            <li>kąpanie zwierzaka</li>
+            <li>zabawa ze zwierzakiem,</li>
+            <li>sprzątanie po zwierzaku,</li>
+            <li>leczenie pupila,</li>
+            <li>wysłanie psa do spania,</li>
+        </ul>
+
+        <div class="dottedline"></div>
+
+        <h4>Użyte technologie:</h4>
+        <img class="TechnologyIcon" src="~/Resources/dotnetIcon.png" />
+    </div>
+</div>
+
+<div class="line"></div>
+
+<div class="row">
+    <div class="ProjectImageContainer col-sm-6">
+
+        @*<a href='@Url.Action("Tamagotchi", "Projects")'>*@
+            <img src="~/Resources/questionmark.jpg" alt="Avatar" class="ProjectImage img-responsive" style="width:100%">
+            <div class="ProjectMiddle">
+                <div class="ProjectText">Aplikacja w budowie</div>
+            </div>
+        @*</a>*@
+    </div>
+
+    <div class="col-sm-6">
+
+        <h4>Krótki opis Aplikacji:</h4>
+        <p>Aplikacja Webowa do zarządzania korepetycjami</p>
+
+        <div class="dottedline"></div>
+
+        <h4>Funkcjonalności:</h4>
+        <ul>
+            <li>dodawanie/usuwanie/edycja godziń korepetycji,</li>
+            <li>czat globalny/prywatny,</li>
+            <li>interakcja nauczyciel-uczeń,</li>
+            <li>wysyłanie/kontrola zadań domowych,</li>
+            <li>wyświetlanie grafiku,</li>
+            <li>statystyki</li>
+        </ul>
+
+        <div class="dottedline"></div>
+
+        <h4>Użyte technologie:</h4>
+
+        <img class="TechnologyIcon" src="~/Resources/dotnetIcon.png" />
+        <img class="TechnologyIcon" src="~/Resources/entityFrameworkIcon.png" />
+        <img class="TechnologyIcon" src="~/Resources/MvcIcon.jpg" />
+        <img class="TechnologyIcon" src="~/Resources/html-icon.png" />
+        <img class="TechnologyIcon" src="~/Resources/css-icon.png" />
+        <img class="TechnologyIcon" src="~/Resources/bootstrap_logo.png" />
+        <img class="TechnologyIcon" src="~/Resources/javascript-icon.png" />
+
+    </div>
+</div>
+
+
+
+
